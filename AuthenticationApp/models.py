@@ -122,3 +122,40 @@ class Student(models.Model):
     @property
     def is_staff(self):
         return False
+
+# Teacher model
+class Professor(models.Model):
+	# Create Teacher Profile: university, contact info, etc
+	first_name = models.CharField(
+    	max_length=120,
+    	null=True,
+    )    
+
+    last_name = models.CharField(
+    	max_length=120,
+    	null=True,
+    )
+	
+	university = models.CharField(
+    	max_length=120,
+    )
+		
+	email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        unique=True,
+    )
+	
+	def get_full_name(self):        
+        return "%s %s" %(self.user.first_name, self.user.last_name)
+	
+	def get_short_name(self):        
+        return self.user.first_name
+	
+	# ?? Allows creation of Teacher users
+	def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):        
+        return True
+    
