@@ -11,20 +11,22 @@ from django.db.models.signals import post_save
 # Create your models here.
 class MyUserManager(BaseUserManager):
     def create_user(self, email=None, password=None, first_name=None, last_name=None):
-        if not email:
-            raise ValueError('Users must have an email address')
+		if not email:
+			raise ValueError('Users must have an email address')
 
-        #We can safetly create the user
-        #Only the email field is required
-        user = self.model(email=email)
-        user.set_password(password)
+		#We can safetly create the user
+		#Only the email field is required
+		user = self.model(email=email)
+		user.set_password(password)
+		user.first_name = first_name
+		user.last_name = last_name
 
-        #If first_name is not present, set it as email's username by default
-        if first_name is None or first_name == "" or first_name == '':                                
-            user.first_name = email[:email.find("@")]            
+		#If first_name is not present, set it as email's username by default
+		if first_name is None or first_name == "" or first_name == '':
+			user.first_name = email[:email.find("@")]            
         
-        user.save(using=self._db)
-        return user
+		user.save(using=self._db)
+		return user
 
     def create_superuser(self, email=None, password=None, first_name=None, last_name=None):
         user = self.create_user(email, password=password, first_name=first_name, last_name=last_name)
@@ -56,9 +58,9 @@ class MyUser(AbstractBaseUser):
     is_admin = models.BooleanField(default=False,)
 
     # #New fields added
-    # is_student = models.BooleanField(default=False,)
-    # is_professor = models.BooleanField(default=False,)
-    # is_engineer = models.BooleanField(default=False,)    
+    is_student = models.BooleanField(default=False,)
+    is_professor = models.BooleanField(default=False,)
+    is_engineer = models.BooleanField(default=False,)    
 
     objects = MyUserManager()
 
@@ -123,18 +125,72 @@ class Student(models.Model):
     def is_staff(self):
         return False
 
+class Engineer(models.Model):
+	user = models.OneToOneField(
+		MyUser,
+		on_delete=models.CASCADE,
+		primary_key=True)
+
+	alma_mater = models.CharField(
+		max_length=120,
+		null=True,
+	)
+
+	about = models.CharField(
+		max_length=120,
+		null=True,
+	)
+
+	contact_info = models.CharField(
+		max_length=120,
+		null=True,
+	)
+	
+	def get_full_name(self):        
+		return "%s %s" %(self.user.first_name, self.user.last_name)
+
+	def get_short_name(self):        
+		return self.user.first_name
+
+	def get_alma_mater(self):
+		return self.alma_mater
+
+	def get_about(self):
+		return self.about
+
+	def get_contact_info(self):
+		return self.contact_info
+	
+	def __str__(self):              #Python 3
+		return self.user.email
+
+	def __unicode__(self):           # Python 2
+		return self.user.email
+
+	def has_perm(self, perm, obj=None):
+		return True
+
+	def has_module_perms(self, app_label):        
+		return True
+
+
+	@property
+	def is_staff(self):
+		return False
+
+
 # Teacher model
 class Professor(models.Model):
 	# Create Teacher Profile: university, contact info, etc
 	first_name = models.CharField(
-    	max_length=120,
-    	null=True,
-    )    
+		max_length=120,
+		null=True,
+	)
 
-    last_name = models.CharField(
-    	max_length=120,
-    	null=True,
-    )
+	last_name = models.CharField(
+		max_length=120,
+		null=True,
+	)
 	
 	university = models.CharField(
     	max_length=120,
@@ -147,15 +203,14 @@ class Professor(models.Model):
     )
 	
 	def get_full_name(self):        
-        return "%s %s" %(self.user.first_name, self.user.last_name)
+		return "%s %s" %(self.user.first_name, self.user.last_name)
 	
 	def get_short_name(self):        
-        return self.user.first_name
+		return self.user.first_name
 	
 	# ?? Allows creation of Teacher users
 	def has_perm(self, perm, obj=None):
-        return True
+		return True
 
-    def has_module_perms(self, app_label):        
-        return True
-    
+	def has_module_perms(self, app_label):        
+		return True 
