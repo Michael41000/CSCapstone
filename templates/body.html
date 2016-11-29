@@ -18,7 +18,8 @@
 				<ul class="nav navbar-nav">
 				{% if user.is_authenticated == False %}
 					<li><a href="/login">Login</a></li>
-					<li><a href="/register">Register</a></li>
+					<li><a href="/registerStudent">Register Student</a></li>
+					<li><a href="/registerEngineer">Register Engineer</a></li>
 				{% else %}
 					<li><a href="/update">Update Profile</a></li>
 					<li role="presentation" class="dropdown">
