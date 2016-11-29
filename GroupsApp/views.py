@@ -56,6 +56,7 @@ def getGroupFormSuccess(request):
 
 def joinGroup(request):
     if request.user.is_authenticated():
+    	print request.user
         in_name = request.GET.get('name', 'None')
         in_group = models.Group.objects.get(name__exact=in_name)
         in_group.members.add(request.user)
@@ -68,7 +69,35 @@ def joinGroup(request):
         }
         return render(request, 'group.html', context)
     return render(request, 'autherror.html')
-    
+
+#def joinGroupUser(request):
+#   if request.user.is_authenticated():
+#  	print request.user
+#        in_name = request.GET.get('name', 'None')
+#        in_group = models.Group.objects.get(name__exact=in_name)
+#        form = Form(request.POST or None)
+#        if form.is_valid():
+#			try:
+#				otheruseremail = String(request.post['email'])
+#		    	otheruser = User.objects.get(email=otheruseremail)
+#		    except User.DoesNotExist:
+#				context = {
+#				    'group' : in_group,
+#				    'userIsMember': True,
+#				}
+#				return render(request, 'autherror.html')
+#		    in_group.members.add(other_user)
+#		    in_group.save();
+#		    other_user.group_set.add(in_group)
+#		    other_user.save()
+#		    context = {
+#		        'group' : in_group,
+#		        'userIsMember': True,
+#		    }
+#		    return render(request, 'group.html', context)
+#		return render(request, 'autherror.html') 
+#    return render(request, 'autherror.html')   
+
 def unjoinGroup(request):
     if request.user.is_authenticated():
         in_name = request.GET.get('name', 'None')
