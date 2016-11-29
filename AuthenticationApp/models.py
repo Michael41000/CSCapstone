@@ -124,8 +124,6 @@ class Student(models.Model):
     @property
     def is_staff(self):
         return False
-<<<<<<< HEAD
-=======
 
 class Engineer(models.Model):
 	user = models.OneToOneField(
@@ -216,4 +214,3 @@ class Professor(models.Model):
 
 	def has_module_perms(self, app_label):        
 		return True 
->>>>>>> 9751b6324c9d8b2f18e6d8d3ea540a5f385ca993

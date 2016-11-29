@@ -36,7 +36,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/u92/niceb/CS390/python/CSCapstone"
+set -gx VIRTUAL_ENV "/u/data/u92/niceb/CS390/python/CSCapstone"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

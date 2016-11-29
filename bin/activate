@@ -40,7 +40,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/u92/niceb/CS390/python/CSCapstone"
+VIRTUAL_ENV="/u/data/u92/niceb/CS390/python/CSCapstone"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
