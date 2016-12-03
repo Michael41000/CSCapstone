@@ -201,39 +201,51 @@ class Engineer(models.Model):
 	def is_staff(self):
 		return False
 
-
-# Teacher model
 class Professor(models.Model):
-	# Create Teacher Profile: university, contact info, etc
-	first_name = models.CharField(
+	user = models.OneToOneField(
+		MyUser,
+		on_delete=models.CASCADE,
+		primary_key=True)
+
+	university = models.CharField(
 		max_length=120,
 		null=True,
 	)
 
-	last_name = models.CharField(
+	contact_info = models.CharField(
 		max_length=120,
 		null=True,
 	)
-	
-	university = models.CharField(
-    	max_length=120,
-    )
-		
-	email = models.EmailField(
-        verbose_name='email address',
-        max_length=255,
-        unique=True,
-    )
 	
 	def get_full_name(self):        
 		return "%s %s" %(self.user.first_name, self.user.last_name)
-	
+
 	def get_short_name(self):        
 		return self.user.first_name
+
+	def get_university(self):
+		return self.university
+
+	def get_contact_info(self):
+		return self.contact_info
 	
-	# ?? Allows creation of Teacher users
+	def __str__(self):              #Python 3
+		return self.user.email
+
+	def __unicode__(self):           # Python 2
+		return self.user.email
+
 	def has_perm(self, perm, obj=None):
 		return True
 
 	def has_module_perms(self, app_label):        
-		return True 
+		return True
+
+
+	@property
+	def is_staff(self):
+		return False
+
+
+
+

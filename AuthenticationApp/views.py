@@ -10,8 +10,8 @@ from django.shortcuts import render
 from django.contrib import messages
 
 
-from .forms import LoginForm, RegisterStudentForm, RegisterEngineerForm, UpdateForm
-from .models import MyUser, Student, Engineer
+from .forms import LoginForm, RegisterStudentForm, RegisterEngineerForm, RegisterProfessorForm, UpdateForm
+from .models import MyUser, Student, Engineer, Professor
 
 # Auth Views
 
@@ -84,21 +84,6 @@ def auth_register_student(request):
 	}
 	return render(request, 'auth_form.html', context)
 
-@login_required
-def update_profile(request):
-	form = UpdateForm(request.POST or None, instance=request.user)
-	if form.is_valid():
-		form.save()
-		messages.success(request, 'Success, your profile was saved!')
-
-	context = {
-		"form": form,
-		"page_name" : "Update",
-		"button_value" : "Update",
-		"links" : ["logout"],
-	}
-	return render(request, 'auth_form.html', context)
-
 def auth_register_engineer(request):
 	if request.user.is_authenticated():
 		return HttpResponseRedirect("/")
@@ -126,6 +111,58 @@ def auth_register_engineer(request):
 		"page_name" : "Register",
 		"button_value" : "Register",
 		"links" : ["login"],
+	}
+	return render(request, 'auth_form.html', context)
+
+def auth_register_professor(request):
+	if request.user.is_authenticated():
+		return HttpResponseRedirect("/")
+		
+	form = RegisterProfessorForm(request.POST or None)
+	if form.is_valid():
+
+		new_user = MyUser.objects.create_user(email=form.cleaned_data['email'], 
+			password=form.cleaned_data["password2"], 
+			first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'])
+		new_user.is_engineer = True	
+		new_user.save()
+		#Also registering engineer	
+		new_professor = Professor(user = new_user)
+		new_professor.university = form.cleaned_data["university"]
+		new_professor.contactinfo = form.cleaned_data["contactinfo"]
+		new_professor.save()
+		login(request, new_user);	
+		messages.success(request, 'Success! Your Engineer account was created.')
+		return render(request, 'index.html')
+
+	context = {
+		"form": form,
+		"page_name" : "Register",
+		"button_value" : "Register",
+		"links" : ["login"],
+	}
+	return render(request, 'auth_form.html', context)
+
+
+
+@login_required
+def update_profile(request):
+	form = UpdateForm(request.POST or None, instance=request.user)
+	if request.user.is_student:
+		print "Is Student"
+	if request.user.is_engineer:
+		print "Is Engineer"
+	if request.user.is_professor:
+		print "Is Professor"
+	if form.is_valid():
+		form.save()
+		messages.success(request, 'Success, your profile was saved!')
+
+	context = {
+		"form": form,
+		"page_name" : "Update",
+		"button_value" : "Update",
+		"links" : ["logout"],
 	}
 	return render(request, 'auth_form.html', context)
 
