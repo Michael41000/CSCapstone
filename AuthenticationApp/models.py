@@ -101,12 +101,35 @@ class Student(models.Model):
         MyUser,
         on_delete=models.CASCADE,
         primary_key=True)
-
+    
+    yearsXP = models.IntegerField(
+        null=True,
+    )
+    
+    languages = models.CharField(
+        max_length=120,
+        null=True,
+    )
+    
+    specialties = models.CharField(
+        max_length=120,
+        null=True,
+    )
+    
     def get_full_name(self):        
         return "%s %s" %(self.user.first_name, self.user.last_name)
 
     def get_short_name(self):        
         return self.user.first_name
+        
+    def get_yearsXP(self):
+        return self.yearsXP
+        
+    def get_languages(self):
+        return self.languages
+        
+    def get_specialties(self):
+        return self.specialties
 
     def __str__(self):              #Python 3
         return self.user.email

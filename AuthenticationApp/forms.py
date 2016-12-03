@@ -20,7 +20,10 @@ class RegisterStudentForm(forms.Form):
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput, required=True)    
 
     firstname = forms.CharField(label="First name", widget=forms.TextInput, required=False)
-    lastname = forms.CharField(label="Last name", widget=forms.TextInput, required=False)               
+    lastname = forms.CharField(label="Last name", widget=forms.TextInput, required=False)   
+    yearsXP = forms.IntegerField(label="Years of Programming Experience", widget=forms.NumberInput, required=False)
+    languages = forms.CharField(label="Programming Languages", widget=forms.TextInput, required=False)
+    specialties = forms.CharField(label="Specialties", widget=forms.TextInput, required=False)
 
 	
 	 
