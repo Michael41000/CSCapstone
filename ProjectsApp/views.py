@@ -14,7 +14,15 @@ def getProjects(request):
     })
 
 def getProject(request):
-	return render(request, 'project.html')
+	if request.user.is_authenticated():
+		in_name = request.GET.get('name', 'None')
+		proj = models.Project.objects.get(name__exact=in_name)
+		context = {
+				'project' : proj,
+			}
+		return render(request, 'project.html', context)
+		# render error page if user is not logged in
+	return render(request, 'autherror.html')
 
 def getProjectForm(request):
         if request.user.is_authenticated():
