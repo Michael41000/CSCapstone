@@ -16,9 +16,9 @@ class Project(models.Model):
 
     # TODO Task 3.5: Add field for company relationship
     # TODO Task 3.5: Add fields for project qualifications (minimum required: programming language, years of experience, speciality)
-    langs = models.CharField(max_length=1000, default='None')
-    yearsXP = models.IntegerField(validators=[MaxValueValidator(10)], default='1')
-    specialty = models.CharField(max_length=1000, default='None')
+    langs = models.CharField(max_length=1000)
+    yearsXP = models.IntegerField(validators=[MaxValueValidator(10)], null=True)
+    specialty = models.CharField(max_length=1000)
     companyRelationship = models.OneToOneField(Company, null=True);
 
     def __str__(self):

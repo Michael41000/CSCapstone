@@ -38,10 +38,14 @@ def getProjectFormSuccess(request):
                         if form.is_valid():
                                 if models.Project.objects.filter(name__exact=form.cleaned_data['name']).exists():
                                         return render(request, 'projectform.html', {'error' : 'Error: That Project name already exists!'})
-                                new_project = models.Project(name=form.cleaned_data['name'], description=form.cleaned_data['description'])
+                                new_project = models.Project(name=form.cleaned_data['name'], description=form.cleaned_data['description'], langs=form.cleaned_data['langs'], yearsXP=form.cleaned_data['yearsXP'],specialty=form.cleaned_data['specialty'])
                                 new_project.save();
                                 context = {
                                         'name' : form.cleaned_data['name'],
+                                        'description' : form.cleaned_data['description'],
+                                        'langs' : form.cleaned_data['langs'],
+                                        'yearsXP' : form.cleaned_data['yearsXP'],
+                                        'specialty' : form.cleaned_data['specialty'],
                                         }
                                 return render(request, 'projectformsuccess.html', context)
                 else:
