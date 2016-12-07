@@ -7,20 +7,22 @@
 		<div class="jumbotron">
 			<h1>{{ group.name }}</h1>
 			<p>{{ group.description }}</p>
-			{% if userIsMember %}
-			<a href="/group/unjoin?name={{ group.name }}" class="btn btn-default">Unjoin this Group</a>
+			{% if user.is_student %}
+				{% if userIsMember %}
+				<a href="/group/unjoin?name={{ group.name }}" class="btn btn-default">Unjoin this Group</a>
 
-			<form method="post" action="/group/joinUser?name={{ group.name }}" class="panel-body validate">
-				{% csrf_token %}
-				<label for="email">Enroll A Student</label>
-				<h6 style="color:red">{{ error }}</h6>
-				<input type="text" name="email" id="email" placeholder="Email" class="form-control" data-bvalidator="required" data-bvalidator-msg="Email Required">
-				<br>
-				<input type="submit" value="Submit" class="btn btn-primary">
-			</form>
+				<form method="post" action="/group/joinUser?name={{ group.name }}" class="panel-body validate">
+					{% csrf_token %}
+					<label for="email">Enroll A Student</label>
+					<h6 style="color:red">{{ error }}</h6>
+					<input type="text" name="email" id="email" placeholder="Email" class="form-control" data-bvalidator="required" data-bvalidator-msg="Email Required">
+					<br>
+					<input type="submit" value="Submit" class="btn btn-primary">
+				</form>
 
-			{% else %}
-			<a href="/group/join?name={{ group.name }}" class="btn btn-default">Join this Group</a>
+				{% else %}
+				<a href="/group/join?name={{ group.name }}" class="btn btn-default">Join this Group</a>
+				{% endif %}
 			{% endif %}
 		</div>
 	</div>

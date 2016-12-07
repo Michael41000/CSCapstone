@@ -82,11 +82,11 @@ def joinGroupUser(request):
         except models.MyUser.DoesNotExist:
             return render(request, 'UserNotExist.html')
         if other_user.is_authenticated():
-            print other_user
-            in_group.members.add(other_user)
-            in_group.save();
-            other_user.group_set.add(in_group)
-            other_user.save()
+            if other_user.is_student:
+                in_group.members.add(other_user)
+                in_group.save();
+                other_user.group_set.add(in_group)
+                other_user.save()
             context = {
                 'group' : in_group,
                 'userIsMember': True,
