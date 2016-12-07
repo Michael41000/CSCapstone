@@ -18,11 +18,18 @@
 				<ul class="nav navbar-nav">
 				{% if user.is_authenticated == False %}
 					<li><a href="/login">Login</a></li>
-					<li><a href="/registerStudent">Register Student</a></li>
-					<li><a href="/registerEngineer">Register Engineer</a></li>
-					<li><a href="/registerProfessor">Register Professor</a></li>
+					<li><a href="/register">Register</a></li>
 				{% else %}
-					<li><a href="/update">Update Profile</a></li>
+					<li role="presentation" class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+						  Profile<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="/update">Update Profile</a></li>
+							<li><a href="/view">View Profile</a></li>
+						</ul>
+					</li>
+
 					<li role="presentation" class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 						  Companies/Groups/Organizations/Projects <span class="caret"></span>
@@ -40,7 +47,9 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li><a href="/company/form">Create Company</a></li>
+							{% if user.is_admin == True %}
 							<li><a href="/university/form">Create University</a></li>
+							{% endif %}
 							<li><a href="/group/form">Create Group</a></li>
 							{% if user.is_engineer == True %}
 							<li><a href="/project/form">Create Project</a></li>
