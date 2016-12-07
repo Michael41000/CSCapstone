@@ -69,9 +69,9 @@ def auth_register(request):
 		if form.cleaned_data['usertype'] == 'S':	
 			new_user.is_student = True
 			new_student = Student(user = new_user)
-	                new_student.yearsXP = form.cleaned_data["yearsXP"]
-		        new_student.languages = form.cleaned_data["languages"]
-		        new_student.specialties = form.cleaned_data["specialties"]
+			new_student.yearsXP = form.cleaned_data["yearsXP"]
+			new_student.languages = form.cleaned_data["languages"]
+			new_student.specialties = form.cleaned_data["specialties"]
 			new_student.save()
 		elif form.cleaned_data['usertype'] == 'E':
 			new_user.is_engineer = True

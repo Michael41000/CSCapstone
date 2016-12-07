@@ -46,30 +46,30 @@ class MyUser(AbstractBaseUser):
 		max_length=120,
 		null=True,
 		blank=True,
-		)    
+	)    
 
 	last_name = models.CharField(
 		max_length=120,
 		null=True,
 		blank=True,
-		)
+	)
 
 	contact_info = models.CharField(
 		max_length=120,
 		null=True,
 		blank=True,
-		)
+	)
 
 	about = models.CharField(
 		max_length=120,
 		null=True,
 		blank=True,
-		)
+	)
 
     # #New fields 	
-    is_student = models.BooleanField(default=False,)
-    is_professor = models.BooleanField(default=False,)
-    is_engineer = models.BooleanField(default=False,)    
+	is_student = models.BooleanField(default=False,)
+	is_professor = models.BooleanField(default=False,)
+	is_engineer = models.BooleanField(default=False,)    
 	
 
 	is_active = models.BooleanField(default=True,)
