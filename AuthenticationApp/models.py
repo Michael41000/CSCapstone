@@ -57,7 +57,7 @@ class MyUser(AbstractBaseUser):
     is_active = models.BooleanField(default=True,)
     is_admin = models.BooleanField(default=False,)
 
-    # #New fields added
+    # #New fields 	
     is_student = models.BooleanField(default=False,)
     is_professor = models.BooleanField(default=False,)
     is_engineer = models.BooleanField(default=False,)    
@@ -88,6 +88,19 @@ class MyUser(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+        
+    #@property
+    #def is_student(self):
+        #return False
+        
+    #@property
+    #def is_professor(self):
+        #return False
+        
+    #@property
+    #def is_engineer(self):
+        #return False
+    
     
 #     def new_user_reciever(sender, instance, created, *args, **kwargs):
 #     	if created:   
@@ -147,6 +160,12 @@ class Student(models.Model):
     @property
     def is_staff(self):
         return False
+        
+    #@property
+    #def is_student(self):
+        #return True
+        
+	is_student = True 
 
 class Engineer(models.Model):
 	user = models.OneToOneField(
@@ -200,6 +219,12 @@ class Engineer(models.Model):
 	@property
 	def is_staff(self):
 		return False
+		
+	#@property
+	#def is_engineer(self):
+		#return False
+	
+	is_engineer = True
 
 class Professor(models.Model):
 	user = models.OneToOneField(
@@ -245,7 +270,9 @@ class Professor(models.Model):
 	@property
 	def is_staff(self):
 		return False
-
-
-
-
+	
+	#@property
+	#def is_professor(self):
+		#return False
+		
+	is_professor = True

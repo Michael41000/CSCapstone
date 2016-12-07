@@ -42,7 +42,9 @@
 							<li><a href="/company/form">Create Company</a></li>
 							<li><a href="/university/form">Create University</a></li>
 							<li><a href="/group/form">Create Group</a></li>
+							{% if user.is_engineer == True %}
 							<li><a href="/project/form">Create Project</a></li>
+							{% endif %}
 						</ul>
 					</li>
 					<li><a href="/logout">Logout</a></li>
