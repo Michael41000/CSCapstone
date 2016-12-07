@@ -65,7 +65,6 @@ def auth_register(request):
 		)
 		new_user.contact_info = form.cleaned_data['contactinfo']
 		new_user.about = form.cleaned_data['about']
-		new_user.save()	
 		#Also registering students		
 		if form.cleaned_data['usertype'] == 'S':	
 			new_user.is_student = True
