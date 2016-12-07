@@ -7,6 +7,7 @@ from django.shortcuts import render
 
 from . import models
 from . import forms
+from AuthenticationApp.models import Student, Engineer, Professor
 
 def getUniversities(request):
     if request.user.is_authenticated():
@@ -62,19 +63,31 @@ def getUniversityFormSuccess(request):
     return render(request, 'autherror.html')
 
 def joinUniversity(request):
-    if request.user.is_authenticated():
-        in_name = request.GET.get('name', 'None')
-        in_university = models.University.objects.get(name__exact=in_name)
-        in_university.members.add(request.user)
-        in_university.save();
-        request.user.university_set.add(in_university)
-        request.user.save()
-        context = {
-            'university' : in_university,
-            'userIsMember': True,
-        }
-        return render(request, 'university.html', context)
-    return render(request, 'autherror.html')
+	if request.user.is_authenticated():
+		in_name = request.GET.get('name', 'None')
+		in_university = models.University.objects.get(name__exact=in_name)
+		in_university.members.add(request.user)
+		in_university.save();
+		request.user.university_set.add(in_university)
+		request.user.save()
+		if request.user.is_student == True:
+			current_student = Student.objects.get(user=request.user)
+			current_student.university = in_university
+			current_student.save()
+		elif request.user.is_engineer == True:
+			current_engineer = Engineer.objects.get(user=request.user)
+			current_engineer.almamater = in_university
+			current_engineer.save()
+		elif request.user.is_professor == True:
+			current_professor = Professor.objects.get(user=request.user)
+			current_professor.university = in_university
+			current_professor.save()
+		context = {
+			'university' : in_university,
+			'userIsMember': True,
+		}
+		return render(request, 'university.html', context)
+	return render(request, 'autherror.html')
     
 def unjoinUniversity(request):
     if request.user.is_authenticated():
@@ -126,13 +139,21 @@ def addCourse(request):
 				in_university = models.University.objects.get(name__exact=in_university_name)
 				if in_university.course_set.filter(tag__exact=form.cleaned_data['tag']).exists():
 					return render(request, 'courseform.html', {'error' : 'Error: That course tag already exists at this university!'})
-				new_course = models.Course(tag=form.cleaned_data['tag'],
-										   name=form.cleaned_data['name'],
-										   description=form.cleaned_data['description'],
-										   university=in_university)
+				#new_course = models.Course(tag=form.cleaned_data['tag'],
+				#						   name=form.cleaned_data['name'],
+				#						   description=form.cleaned_data['description'],
+				#						   university=in_university)
+				new_course = models.Course()
+				new_course.tag = form.cleaned_data['tag']
+				new_course.name = form.cleaned_data['name']
+				new_course.description = form.cleaned_data['description']
+				new_course.university = in_university
 				new_course.save()
+				request.user.course_set.add(new_course)
 				in_university.course_set.add(new_course)
 				is_member = in_university.members.filter(email__exact=request.user.email)
+				new_course.members.add(request.user)
+				new_course.save()
 				context = {
 					'university' : in_university,
 					'userIsMember': is_member,

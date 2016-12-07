@@ -10,7 +10,7 @@ from django.db.models.signals import post_save
 
 # Create your models here.
 class MyUserManager(BaseUserManager):
-    def create_user(self, email=None, password=None, first_name=None, last_name=None):
+	def create_user(self, email=None, password=None, first_name=None, last_name=None):
 		if not email:
 			raise ValueError('Users must have an email address')
 
@@ -28,79 +28,80 @@ class MyUserManager(BaseUserManager):
 		user.save(using=self._db)
 		return user
 
-    def create_superuser(self, email=None, password=None, first_name=None, last_name=None):
-        user = self.create_user(email, password=password, first_name=first_name, last_name=last_name)
-        user.is_admin = True
-        user.save(using=self._db)
-        return user
+	def create_superuser(self, email=None, password=None, first_name=None, last_name=None):
+		user = self.create_user(email, password=password, first_name=first_name, last_name=last_name)
+		user.is_admin = True
+		user.save(using=self._db)
+		return user
 
 
 class MyUser(AbstractBaseUser):
-    email = models.EmailField(
-        verbose_name='email address',
-        max_length=255,
-        unique=True,
-    )
+	email = models.EmailField(
+		verbose_name='email address',
+		max_length=255,
+		unique=True,
+	)
 
-    first_name = models.CharField(
-    	max_length=120,
-    	null=True,
-    	blank=True,
-    	)    
+	first_name = models.CharField(
+		max_length=120,
+		null=True,
+		blank=True,
+		)    
 
-    last_name = models.CharField(
-    	max_length=120,
-    	null=True,
-    	blank=True,
-    	)
+	last_name = models.CharField(
+		max_length=120,
+		null=True,
+		blank=True,
+		)
 
-    is_active = models.BooleanField(default=True,)
-    is_admin = models.BooleanField(default=False,)
+	contact_info = models.CharField(
+		max_length=120,
+		null=True,
+		blank=True,
+		)
+
+	about = models.CharField(
+		max_length=120,
+		null=True,
+		blank=True,
+		)
 
     # #New fields 	
     is_student = models.BooleanField(default=False,)
     is_professor = models.BooleanField(default=False,)
     is_engineer = models.BooleanField(default=False,)    
+	
 
-    objects = MyUserManager()
+	is_active = models.BooleanField(default=True,)
+	is_admin = models.BooleanField(default=False,)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+	objects = MyUserManager()
 
-    def get_full_name(self):        
-        return "%s %s" %(self.first_name, self.last_name)
+	USERNAME_FIELD = 'email'
+	REQUIRED_FIELDS = []
 
-    def get_short_name(self):        
-        return self.first_name
+	def get_full_name(self):        
+		return "%s %s" %(self.first_name, self.last_name)
 
-    def __str__(self):              #Python 3
-        return self.email
+	def get_short_name(self):        
+		return self.first_name
 
-    def __unicode__(self):           # Python 2
-        return self.email
+	def __str__(self):              #Python 3
+		return self.email
 
-    def has_perm(self, perm, obj=None):
-        return True
+	def __unicode__(self):           # Python 2
+		return self.email
 
-    def has_module_perms(self, app_label):        
-        return True
+	def has_perm(self, perm, obj=None):
+		return True
 
-    @property
-    def is_staff(self):
-        return self.is_admin
+	def has_module_perms(self, app_label):        
+		return True
+
         
-    #@property
-    #def is_student(self):
-        #return False
-        
-    #@property
-    #def is_professor(self):
-        #return False
-        
-    #@property
-    #def is_engineer(self):
-        #return False
-    
+	@property
+	def is_staff(self):
+		return self.is_admin
     
 #     def new_user_reciever(sender, instance, created, *args, **kwargs):
 #     	if created:   
@@ -110,99 +111,77 @@ class MyUser(AbstractBaseUser):
              
 
 class Student(models.Model):
-    user = models.OneToOneField(
-        MyUser,
-        on_delete=models.CASCADE,
-        primary_key=True)
+	from UniversitiesApp.models import University
+	
+	user = models.OneToOneField(
+		MyUser,
+		on_delete=models.CASCADE,
+		primary_key=True)
+
+	university = models.ForeignKey(University, on_delete=models.CASCADE, null=True)
+	
+        yearsXP = models.IntegerField(
+            null=True,
+        )
     
-    yearsXP = models.IntegerField(
-        null=True,
-    )
+        languages = models.CharField(
+            max_length=120,
+            null=True,
+        )
     
-    languages = models.CharField(
-        max_length=120,
-        null=True,
-    )
+        specialties = models.CharField(
+            max_length=120,
+            null=True,
+        )
     
-    specialties = models.CharField(
-        max_length=120,
-        null=True,
-    )
-    
-    def get_full_name(self):        
-        return "%s %s" %(self.user.first_name, self.user.last_name)
+        def get_full_name(self):        
+            return "%s %s" %(self.user.first_name, self.user.last_name)
 
-    def get_short_name(self):        
-        return self.user.first_name
+        def get_short_name(self):        
+            return self.user.first_name
         
-    def get_yearsXP(self):
-        return self.yearsXP
+        def get_yearsXP(self):
+            return self.yearsXP
         
-    def get_languages(self):
-        return self.languages
+        def get_languages(self):
+            return self.languages
         
-    def get_specialties(self):
-        return self.specialties
+        def get_specialties(self):
+            return self.specialties
 
-    def __str__(self):              #Python 3
-        return self.user.email
+	def __str__(self):              #Python 3
+		return self.user.email
 
-    def __unicode__(self):           # Python 2
-        return self.user.email
+	def __unicode__(self):           # Python 2
+		return self.user.email
 
-    def has_perm(self, perm, obj=None):
-        return True
+	def has_perm(self, perm, obj=None):
+		return True
 
-    def has_module_perms(self, app_label):        
-        return True
+	def has_module_perms(self, app_label):        
+		return True
 
 
-    @property
-    def is_staff(self):
-        return False
-        
-    #@property
-    #def is_student(self):
-        #return True
-        
-	is_student = True 
+	@property
+	def is_staff(self):
+		return False
 
 class Engineer(models.Model):
+	from UniversitiesApp.models import University
+	
 	user = models.OneToOneField(
 		MyUser,
 		on_delete=models.CASCADE,
 		primary_key=True)
 
-	alma_mater = models.CharField(
-		max_length=120,
-		null=True,
-	)
+	almamater = models.ForeignKey(University, on_delete=models.CASCADE, null=True)
 
-	about = models.CharField(
-		max_length=120,
-		null=True,
-	)
-
-	contact_info = models.CharField(
-		max_length=120,
-		null=True,
-	)
-	
 	def get_full_name(self):        
 		return "%s %s" %(self.user.first_name, self.user.last_name)
 
 	def get_short_name(self):        
 		return self.user.first_name
 
-	def get_alma_mater(self):
-		return self.alma_mater
-
-	def get_about(self):
-		return self.about
-
-	def get_contact_info(self):
-		return self.contact_info
-	
 	def __str__(self):              #Python 3
 		return self.user.email
 
@@ -220,40 +199,24 @@ class Engineer(models.Model):
 	def is_staff(self):
 		return False
 		
-	#@property
-	#def is_engineer(self):
-		#return False
 	
-	is_engineer = True
 
 class Professor(models.Model):
+	from UniversitiesApp.models import University
+	
 	user = models.OneToOneField(
 		MyUser,
 		on_delete=models.CASCADE,
 		primary_key=True)
 
-	university = models.CharField(
-		max_length=120,
-		null=True,
-	)
+	university = models.ForeignKey(University, on_delete=models.CASCADE, null=True)
 
-	contact_info = models.CharField(
-		max_length=120,
-		null=True,
-	)
-	
 	def get_full_name(self):        
 		return "%s %s" %(self.user.first_name, self.user.last_name)
 
 	def get_short_name(self):        
 		return self.user.first_name
 
-	def get_university(self):
-		return self.university
-
-	def get_contact_info(self):
-		return self.contact_info
-	
 	def __str__(self):              #Python 3
 		return self.user.email
 
@@ -270,9 +233,3 @@ class Professor(models.Model):
 	@property
 	def is_staff(self):
 		return False
-	
-	#@property
-	#def is_professor(self):
-		#return False
-		
-	is_professor = True

@@ -31,6 +31,14 @@
 	<!-- Fonts -->
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	
+	<!-- TinyMCE -->
+	<script src='//cdn.tinymce.com/4/tinymce.min.js'></script>
+  	<script>
+  	tinymce.init({
+    selector: '#mytextarea'
+  	});
+  	</script>
+	
 	<!-- Site CSS -->
 	<link rel="stylesheet" type="text/css" href="{% static "css/site.css" %}">
 </head><body>
