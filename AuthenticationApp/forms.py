@@ -30,7 +30,7 @@ class RegisterForm(forms.Form):
 	contactinfo = forms.CharField(label="Contact Info", widget=forms.TextInput, required=False)               
 
 	about = forms.CharField(label="About", widget=forms.TextInput, required=False)               
-	usertype = forms.ChoiceField(label="Type", choices=USERTYPES, required=True)
+	usertype = forms.ChoiceField(label="Type", choices=USERTYPES, required=True, initial='Student')
 
  
 	def clean_password2(self):
@@ -55,9 +55,9 @@ class RegisterForm(forms.Form):
 class RegisterStudentForm(forms.Form):
 	"""A form to creating new users. Includes all the required
 	fields, plus a repeated password."""
-	yearsXP = forms.IntegerField(label="Years of Programming Experience", widget=forms.NumberInput, required=True)
-	languages = forms.CharField(label="Programming Languages", widget=forms.TextInput, required=True)
-	specialties = forms.CharField(label="Specialties", widget=forms.TextInput, required=True)
+	yearsXP = forms.IntegerField(label="Years of Programming Experience", widget=forms.NumberInput, required=False)
+	languages = forms.CharField(label="Programming Languages", widget=forms.TextInput, required=False)
+	specialties = forms.CharField(label="Specialties", widget=forms.TextInput, required=False)
 
 
 class UpdateForm(forms.ModelForm):
