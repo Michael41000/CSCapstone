@@ -10,6 +10,9 @@
 			<p>Programming languages required: {{ project.langs }}</p>
 			<p>Years of experience required: {{ project.yearsXP }}</p>
 			<p>Specialties associated with this project: {{ project.specialty }}</p>
+			{% if user.is_engineer == True %}
+			<a href="/project/update"><input type="update" value="Edit Project" class="btn btn-primary"></a>
+			{% endif %}
 		</div>
 	</div>
 

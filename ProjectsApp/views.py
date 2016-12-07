@@ -6,6 +6,9 @@ from django.shortcuts import render
 
 from . import models
 from . import forms
+from .forms import UpdateProjectForm
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 def getProjects(request):
 	projects_list = models.Project.objects.all()
@@ -53,5 +56,21 @@ def getProjectFormSuccess(request):
                 return render(request, 'projectform.html')
         return render(request, 'autherror.html')
 
-                                
-        
+@login_required
+def update_project(request):
+	pname = request.GET.get('name')
+	data = {'name', 'description', 'langs', 'yearsXP', 'specialty'}
+	newdata = models.Project.objects.raw('SELECT * FROM Projectsapp_Project', translations=data)
+	
+	form = UpdateProjectForm(instance=request.project)
+	if form.is_valid():
+		form.save()
+		messages.success(request, 'Success, your project was updated!')
+
+	context = {
+		"form": form,
+		"page_name" : "Update",
+		"button_value" : "Update",
+		"links" : ["logout"],
+	}
+	return render(request, 'project_auth_form.html', context)
