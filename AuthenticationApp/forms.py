@@ -4,7 +4,7 @@ Created by Naman Patwari on 10/4/2016.
 """
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django import forms
-from .models import MyUser, Engineer, Professor
+from .models import MyUser, Engineer, Professor, Student
 
 USERTYPES = (
 	('S', 'Student'),
@@ -31,9 +31,6 @@ class RegisterForm(forms.Form):
 
 	about = forms.CharField(label="About", widget=forms.TextInput, required=False)               
 	usertype = forms.ChoiceField(label="Type", choices=USERTYPES, required=True)
-	yearsXP = forms.IntegerField(label="Years of Programming Experience", widget=forms.NumberInput, required=False)
-        languages = forms.CharField(label="Programming Languages", widget=forms.TextInput, required=False)
-        specialties = forms.CharField(label="Specialties", widget=forms.TextInput, required=False)
 
  
 	def clean_password2(self):
@@ -54,6 +51,14 @@ class RegisterForm(forms.Form):
 			return email
 		except:
 			raise forms.ValidationError("There was an error, please contact us later")
+
+class RegisterStudentForm(forms.Form):
+	"""A form to creating new users. Includes all the required
+	fields, plus a repeated password."""
+	yearsXP = forms.IntegerField(label="Years of Programming Experience", widget=forms.NumberInput, required=True)
+	languages = forms.CharField(label="Programming Languages", widget=forms.TextInput, required=True)
+	specialties = forms.CharField(label="Specialties", widget=forms.TextInput, required=True)
+
 
 class UpdateForm(forms.ModelForm):
 	"""A form for updating users. Includes all the fields on
@@ -91,6 +96,11 @@ class UpdateForm(forms.ModelForm):
 			return email[:email.find("@")]      
 		return first_name
    
+class UpdateStudentForm(forms.ModelForm):
+
+	class Meta:
+		model = Student        
+		fields = ('yearsXP', 'languages', 'specialties')
 
 
 """Admin Forms"""

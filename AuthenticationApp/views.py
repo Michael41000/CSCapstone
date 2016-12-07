@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.contrib import messages
 
 
-from .forms import LoginForm, RegisterForm, UpdateForm
+from .forms import LoginForm, RegisterForm, UpdateForm, RegisterStudentForm, UpdateStudentForm
 from .models import MyUser, Student, Engineer, Professor
 
 # Auth Views
@@ -39,7 +39,7 @@ def auth_login(request):
 			messages.warning(request, 'Invalid username or password.')
 			
 	context = {
-		"form": form,
+		"userform": form,
 		"page_name" : "Login",
 		"button_value" : "Login",
 		"links" : ["register"],
@@ -55,29 +55,30 @@ def auth_register(request):
 	if request.user.is_authenticated():
 		return HttpResponseRedirect("/")
 		
-	form = RegisterForm(request.POST or None)
-	if form.is_valid():
+	userform = RegisterForm(request.POST or None)
+	studentform = RegisterStudentForm(request.POST or None)
+	if userform.is_valid() and studentform.is_valid():
 		new_user = MyUser.objects.create_user(
-			email=form.cleaned_data['email'], 
-			password=form.cleaned_data["password2"], 
-			first_name=form.cleaned_data['firstname'], 
-			last_name=form.cleaned_data['lastname'],
+			email=userform.cleaned_data['email'], 
+			password=userform.cleaned_data["password2"], 
+			first_name=userform.cleaned_data['firstname'], 
+			last_name=userform.cleaned_data['lastname'],
 		)
-		new_user.contact_info = form.cleaned_data['contactinfo']
-		new_user.about = form.cleaned_data['about']
+		new_user.contact_info = userform.cleaned_data['contactinfo']
+		new_user.about = userform.cleaned_data['about']
 		#Also registering students		
-		if form.cleaned_data['usertype'] == 'S':	
+		if userform.cleaned_data['usertype'] == 'S':	
 			new_user.is_student = True
 			new_student = Student(user = new_user)
-			new_student.yearsXP = form.cleaned_data["yearsXP"]
-			new_student.languages = form.cleaned_data["languages"]
-			new_student.specialties = form.cleaned_data["specialties"]
+			new_student.yearsXP = studentform.cleaned_data["yearsXP"]
+			new_student.languages = studentform.cleaned_data["languages"]
+			new_student.specialties = studentform.cleaned_data["specialties"]
 			new_student.save()
-		elif form.cleaned_data['usertype'] == 'E':
+		elif userform.cleaned_data['usertype'] == 'E':
 			new_user.is_engineer = True
 			new_engineer = Engineer(user = new_user)
 			new_engineer.save()
-		elif form.cleaned_data['usertype'] == 'P':
+		elif userform.cleaned_data['usertype'] == 'P':
 			new_user.is_professor = True
 			new_professor = Professor(user = new_user)
 			new_professor.save()
@@ -87,18 +88,32 @@ def auth_register(request):
 		return render(request, 'index.html')
 
 	context = {
-		"form": form,
+		"userform": userform,
+		"studentform" : studentform,
 		"page_name" : "Register",
 		"button_value" : "Register",
 		"links" : ["login"],
 	}
-	return render(request, 'auth_form.html', context)
+	return render(request, 'register_form.html', context)
 
 @login_required
 def update_profile(request):
 	form = UpdateForm(request.POST or None, instance=request.user)
 	if request.user.is_student:
 		print "Is Student"
+		student = Student.objects.get(user=request.user)
+		studentform = UpdateStudentForm(instance=student)
+		if form.is_valid() and studentform.is_valid():
+			form.save()
+			messages.success(request, 'Success, your profile was saved!')
+			context = {
+				"userform": form,
+				"studentform": studentform,
+				"page_name" : "Update",
+				"button_value" : "Update",
+				"links" : ["logout"],
+			}
+			return render(request, 'update_form.html', context)	
 	if request.user.is_engineer:
 		print "Is Engineer"
 	if request.user.is_professor:
@@ -108,12 +123,12 @@ def update_profile(request):
 		messages.success(request, 'Success, your profile was saved!')
 
 	context = {
-		"form": form,
+		"userform": form,
 		"page_name" : "Update",
 		"button_value" : "Update",
 		"links" : ["logout"],
 	}
-	return render(request, 'auth_form.html', context)
+	return render(request, 'update_form.html', context)
 
 @login_required
 def view_profile(request):

@@ -9,6 +9,9 @@
 	<div class="panel panel-default">
 		<form method="POST" class="panel-body validate"> {% csrf_token %}
 			{{ userform.as_p }}
+			{% if user.is_student == True %}
+				{{ studentform.as_p }}
+			{% endif %}
 			<input type="submit" class='btn btn-primary' value="{{ button_value }}">
 		</form>
 	</div>

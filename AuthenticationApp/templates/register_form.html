@@ -1,0 +1,39 @@
+{% extends "body.html" %}
+
+{% block head_title %}{{ page_name }} | {% endblock %}
+
+{% block content %}
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+</script>
+<script>
+$(document).ready(function(){
+	var x = document.getElementById("id_usertype").selectedIndex;
+	console.log(document.getElementsByTagName("option")[x].value);
+document.getElementById("id_usertype").addEventListener("click", function() {
+	
+	if (document.getElementsByTagName("option")[document.getElementById("id_usertype").selectedIndex].value == "S")
+	{
+		console.log("student");
+		$('#showthis').show();
+	}
+	else
+	{
+		console.log("not student");
+		$('#showthis').hide();
+	}
+});
+});
+</script>
+
+<div class="container" role="main">
+	<div class="panel panel-default">
+		<form method="POST" class="panel-body validate"> {% csrf_token %}
+			{{ userform.as_p }}
+			<div id="showthis"> {{ studentform.as_p }} </div>			
+			<input type="submit" class='btn btn-primary' value="{{ button_value }}">
+		</form>
+	</div>
+</div>
+
+{% endblock %}
