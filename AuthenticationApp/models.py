@@ -7,8 +7,18 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.db.models.signals import post_save
+from django.core.validators import MaxValueValidator
 
 # Create your models here.
+class ProjectTwo(models.Model):
+	name = models.CharField(max_length=200) 
+	description = models.CharField(max_length=10000)
+	#created_at = models.DateTimeField('date created', default=now, blank=True)
+    #updated_at = models.DateTimeField('date updated', default=now, blank=True)
+	langs = models.CharField(max_length=1000)
+	yearsXP = models.IntegerField(validators=[MaxValueValidator(10)], null=True)
+	specialty = models.CharField(max_length=1000)
+	
 class MyUserManager(BaseUserManager):
 	def create_user(self, email=None, password=None, first_name=None, last_name=None):
 		if not email:
@@ -36,6 +46,7 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractBaseUser):
+
 	email = models.EmailField(
 		verbose_name='email address',
 		max_length=255,
@@ -65,6 +76,8 @@ class MyUser(AbstractBaseUser):
 		null=True,
 		blank=True,
 	)
+	
+	bookmarks = models.ManyToManyField(ProjectTwo);
 
     # #New fields 	
 	is_student = models.BooleanField(default=False,)
