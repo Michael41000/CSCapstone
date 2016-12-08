@@ -5,7 +5,17 @@
 	<!-- Content -->
 	<div class="container theme-showcase" role="main">
 		<div class="jumbotron">
-			<h1>{{ project.name }}</h1>
+			<div>
+				<h1 style="display:inline-block;">{{ project.name }}</h1>
+				{% if is_bookmarked == False %}
+				<a href="/project/addbookmark?name={{ project.name }}"><button id="image1" style="display:inline-block; float:right; background-color: transparent; outline: none; border: none; height:20dp;"><img src="https://www.shareicon.net/data/128x128/2016/09/10/828178_bookmark_356x512.png" id="bkmk" /></button></a> 
+				{% endif %}
+				
+				{% if is_bookmarked == True %}
+				<a href="/project/deletebookmark?name={{ project.name }}"><button id="image1" style="display:inline-block; float:right; background-color: transparent; outline: none; border: none; height:20dp;"><img src="https://www.shareicon.net/data/128x128/2016/09/10/828179_bookmark_356x512.png" /></button></a>
+				{% endif %}
+				
+			</div>
 			<p>{{ project.description }}</p>
 			<p>Programming languages required: {{ project.langs }}</p>
 			<p>Years of experience required: {{ project.yearsXP }}</p>
@@ -16,5 +26,4 @@
 			{% endif %}
 		</div>
 	</div>
-
 {% endblock %}

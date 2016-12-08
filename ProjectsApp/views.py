@@ -10,18 +10,70 @@ from .forms import UpdateProjectForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+def getBookmarks(request):
+	from AuthenticationApp.models import ProjectTwo
+	bookmarks_list = request.user.bookmarks.all()
+		
+	return render(request, 'bookmarks.html', {
+        'bookmarks': bookmarks_list,
+    })
+    
 def getProjects(request):
 	projects_list = models.Project.objects.all()
 	return render(request, 'projects.html', {
         'projects': projects_list,
     })
-
-def getProject(request):
+    
+def addBookmark(request):
+	from AuthenticationApp.models import ProjectTwo	
 	if request.user.is_authenticated():
 		in_name = request.GET.get('name', 'None')
 		proj = models.Project.objects.get(name__exact=in_name)
+		proj2 = ProjectTwo.objects.get(name__exact=in_name)
+		is_bookmarked = True
+		
+		request.user.bookmarks.add(proj2)
+			
 		context = {
 				'project' : proj,
+				'is_bookmarked': is_bookmarked
+			}
+		return render(request, 'project.html', context)
+		# render error page if user is not logged in
+	return render(request, 'autherror.html')
+
+def deleteBookmark(request):
+	from AuthenticationApp.models import ProjectTwo	
+	if request.user.is_authenticated():
+		in_name = request.GET.get('name', 'None')
+		proj = models.Project.objects.get(name__exact=in_name)
+		proj2 = ProjectTwo.objects.get(name__exact=in_name)
+		is_bookmarked = False
+		
+		request.user.bookmarks.remove(proj2)
+			
+		context = {
+				'project' : proj,
+				'is_bookmarked': is_bookmarked
+			}
+		return render(request, 'project.html', context)
+		# render error page if user is not logged in
+	return render(request, 'autherror.html')
+
+def getProject(request):
+	from AuthenticationApp.models import ProjectTwo
+	if request.user.is_authenticated():
+		in_name = request.GET.get('name', 'None')
+		proj = models.Project.objects.get(name__exact=in_name)
+		proj2 = ProjectTwo.objects.get(name__exact=in_name)
+		is_bookmarked = False
+		print(request.user.bookmarks.filter(name__exact=in_name).exists())
+		if request.user.bookmarks.filter(name__exact=in_name).exists():
+			is_bookmarked = True
+		
+		context = {
+				'project' : proj,
+				'is_bookmarked': is_bookmarked
 			}
 		return render(request, 'project.html', context)
 		# render error page if user is not logged in
@@ -35,6 +87,7 @@ def getProjectForm(request):
                 return render(request, 'autherror.html')
         
 def getProjectFormSuccess(request):
+	from AuthenticationApp.models import ProjectTwo
         if request.user.is_authenticated():
                 if request.method == 'POST':
                         form = forms.ProjectForm(request.POST)
@@ -42,7 +95,9 @@ def getProjectFormSuccess(request):
                                 if models.Project.objects.filter(name__exact=form.cleaned_data['name']).exists():
                                         return render(request, 'projectform.html', {'error' : 'Error: That Project name already exists!'})
                                 new_project = models.Project(name=form.cleaned_data['name'], description=form.cleaned_data['description'], langs=form.cleaned_data['langs'], yearsXP=form.cleaned_data['yearsXP'],specialty=form.cleaned_data['specialty'])
+                                temp = ProjectTwo(name=form.cleaned_data['name'], description=form.cleaned_data['description'], langs=form.cleaned_data['langs'], yearsXP=form.cleaned_data['yearsXP'],specialty=form.cleaned_data['specialty'])
                                 new_project.save();
+                                temp.save();
                                 context = {
                                         'name' : form.cleaned_data['name'],
                                         'description' : form.cleaned_data['description'],

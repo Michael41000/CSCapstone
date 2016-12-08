@@ -1,0 +1,26 @@
+{% extends "body.html" %}
+
+{% block content %}
+	
+	<!-- Content -->
+	<div class="container" role="main">
+		<div class="table-responsive">
+			<h1 style="display:inline-block;">My Bookmarked Projects</h1>
+			<table class="table table-striped sortable">
+				<thead>
+					<tr>
+						<th>Project Name</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for bookmark in bookmarks %}
+					<tr>
+						<td><a href="/project?name={{ bookmark.name }}">{{ bookmark.name }}</a></td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+{% endblock %}
