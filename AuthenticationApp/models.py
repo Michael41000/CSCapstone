@@ -122,16 +122,19 @@ class Student(models.Model):
 	
 	yearsXP = models.IntegerField(
 		null=True,
+		blank=True,
 	)
     
 	languages = models.CharField(
 		max_length=120,
 		null=True,
+		blank=True,
 	)
     
 	specialties = models.CharField(
 		max_length=120,
 		null=True,
+		blank=True,
 	)
     
 	def get_full_name(self):        

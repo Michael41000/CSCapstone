@@ -98,10 +98,27 @@ class UpdateForm(forms.ModelForm):
    
 class UpdateStudentForm(forms.ModelForm):
 
+	yearsXP = forms.IntegerField(label="Years of Programming Experience", widget=forms.NumberInput, required=False)
+	languages = forms.CharField(label="Programming Languages", widget=forms.TextInput, required=False)
+	specialties = forms.CharField(label="Specialties", widget=forms.TextInput, required=False)
+
+
+	
 	class Meta:
 		model = Student        
-		fields = ('yearsXP', 'languages', 'specialties')
+		fields = ( 'yearsXP', 'languages', 'specialties')
+	
+	def clean_yearsXP(self):
+		yearsXP = self.cleaned_data.get("yearsXP")
+		return yearsXP
+	
+	def clean_languages(self):
+		languages = self.cleaned_data.get("languages")
+		return languages
 
+	def clean_specialties(self):
+		specialties = self.cleaned_data.get("specialties")
+		return specialties
 
 """Admin Forms"""
 

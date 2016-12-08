@@ -99,24 +99,12 @@ def auth_register(request):
 @login_required
 def update_profile(request):
 	form = UpdateForm(request.POST or None, instance=request.user)
-	studentform = UpdateStudentForm(None)
-
-	if request.user.is_student:
-		print "Is Student"
-		student = Student.objects.get(user=request.user)
-		studentform = UpdateStudentForm(instance=student)
-	elif request.user.is_engineer:
-		print "Is Engineer"
-	elif request.user.is_professor:
-		print "Is Professor"
-	if form.is_valid() and studentform.is_valid():
+	if form.is_valid():
 		form.save()
-		studentform.save()
 		messages.success(request, 'Success, your profile was saved!')
-
+		return render(request, 'viewProfile.html')
 	context = {
 		"userform": form,
-		"studentform": studentform,
 		"page_name" : "Update",
 		"button_value" : "Update",
 		"links" : ["logout"],
@@ -131,7 +119,23 @@ def view_profile(request):
 	contactinfo = request.user.contact_info
 	email = request.user.email
 
-	
+	if request.user.is_student:
+		yearsXP = request.user.student.yearsXP
+		languages = request.user.student.languages
+		specialties = request.user.student.specialties
+		context = {
+			"firstName" : firstName,
+			"lastName": lastName,
+			"about": about,
+			"contactinfo" : contactinfo,
+			"email" : email,
+			"yearsXP" : yearsXP,
+			"languages" : languages,
+			"specialties" : specialties,
+			"page_name" : "View",
+			"links" : ["logout"],
+		}	
+		return render(request, 'viewProfile.html', context)
 
 	context = {
 		"firstName" : firstName,
