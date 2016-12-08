@@ -33,12 +33,21 @@
 				<thead>
 					<tr>
 						<th>Users</th>
+						<th>Email</th>
+						<th>Years of Experience</th>
+						<th>Programming Languages</th>
+						<th>Specialties</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for item in group.members.all %}
 					<tr>
 						<td>{{ item.get_full_name }}</td>
+						<td>{{ item.email }}</td>
+						<td>{{ item.student.get_yearsXP }}</td>
+						<td>{{ item.student.get_languages }}</td>
+						<td>{{ item.student.get_specialties }}</td>
+						
 					</tr>
 					{% endfor %}
 				</tbody>
