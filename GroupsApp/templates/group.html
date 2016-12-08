@@ -86,12 +86,20 @@
 				</tbody>
 			</table>
 		</div>
+		<div id="summernote">Type something...</div>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script> 
+		<script>
+			$(document).ready(function() {
+			  $('#summernote').summernote();
+			});
+		</script>
 	</div>
 	<div>
 	<p>
 	</div>
 	<div class="container" role="main">
 	<div class="panel panel-default">
+		
 		<form method="post" enctype="multipart/form-data" action="/group/groupaddcomment?name={{ group.name }}" class="panel-body validate">
 		{% csrf_token %}
 			<label for="comment">Comment</label>

@@ -17,6 +17,13 @@
 				<label for="description">Group Description</label>
 				<input type="text" name="description" id="description" placeholder="Description" class="form-control" data-bvalidator="required" data-bvalidator-msg="Description Required">
 				<br>
+				<div id="summernote">Type something...</div>
+				<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script> 
+				<script>
+				$(document).ready(function() {
+			  		$('#summernote').summernote();
+				});
+				</script>
 				<input type="submit" value="Submit" class="btn btn-primary">
 			</form>
 		</div>
