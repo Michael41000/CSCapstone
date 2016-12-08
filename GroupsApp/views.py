@@ -5,6 +5,7 @@ from django.shortcuts import render
 
 from . import models
 from . import forms
+from CommentsApp.models import Comment
 
 def getGroups(request):
     if request.user.is_authenticated():
@@ -109,4 +110,52 @@ def unjoinGroup(request):
         }
         return render(request, 'group.html', context)
     return render(request, 'autherror.html')
+    
+def addGroupComment(request):
+	if request.user.is_authenticated():
+		in_name = request.GET.get('name', 'None')
+		in_group = models.Group.objects.get(name__exact=in_name)
+		if request.method == 'POST':
+			form = forms.CommentForm(request.POST)
+			if form.is_valid():
+				new_comment = Comment(user=request.user)
+				new_comment.comment = form.cleaned_data['comment']
+				new_comment.idnum = 1
+				new_comment.save()
+				in_group.comments.add(new_comment)
+				comments_list = in_group.comments.all()
+				is_member = in_group.members.filter(email__exact=request.user.email)
+				context = {
+					'comments' : comments_list,
+					'group' : in_group,
+					'userIsMember' : is_member,
+				}
+				return render(request, 'group.html', context)
+			else:
+				form = forms.CommentForm()
+	return render(request, 'autherror.html')
+	
+def deleteGroup(request):
+	if request.user.is_authenticated():
+		in_name = request.GET.get('name', 'None')
+		in_group = models.Group.objects.get(name__exact=in_name)
+		in_group.delete()
+		return render(request, 'groupdeletesuccess.html')
+	return render(request, 'autherror.html')
+
+def deleteComment(request):
+	if request.user.is_authenticated():
+		in_name = request.GET.get('name', 'None')
+		in_group = models.Group.objects.get(name__exact=in_name)
+		idnum = request.GET.get('idnum', 'None')
+		comment = in_group.comments.filter(idnum = idnum)
+		comment.delete()
+		is_member = in_group.members.filter(email__exact=request.user.email)
+		context = {
+					'group' : in_group,
+					'userIsMember' : is_member,
+				}
+		return render(request, 'group.html', context)
+	return render(request, 'autherror.html')
+
     
