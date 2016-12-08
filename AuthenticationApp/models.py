@@ -82,7 +82,7 @@ class MyUser(AbstractBaseUser):
     # #New fields 	
 	is_student = models.BooleanField(default=False,)
 	is_professor = models.BooleanField(default=False,)
-	is_engineer = models.BooleanField(default=False,)    
+	is_engineer = models.BooleanField(default=False,)
 	
 
 	is_active = models.BooleanField(default=True,)
@@ -135,16 +135,19 @@ class Student(models.Model):
 	
 	yearsXP = models.IntegerField(
 		null=True,
+		blank=True,
 	)
     
 	languages = models.CharField(
 		max_length=120,
 		null=True,
+		blank=True,
 	)
     
 	specialties = models.CharField(
 		max_length=120,
 		null=True,
+		blank=True,
 	)
     
 	def get_full_name(self):        
