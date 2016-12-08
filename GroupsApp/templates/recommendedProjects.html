@@ -8,5 +8,21 @@
 			<h2>Recommended Projects</h2>
 		</div>
 	</div>
+	<div class="table-responsive">
+		<table class="table table-striped sortable">
+	    	<thead>
+		 		<tr>
+		  			<th>Project Name</th>
+		   		</tr>
+		    </thead>
+			<tbody>
+				{% for project in projects %}
+			   	<tr>
+			    	<td><a href="/project?name={{ project.name }}">{{ project.name }}</a></td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
     
 {% endblock %}

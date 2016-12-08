@@ -6,6 +6,7 @@ from django.shortcuts import render
 from . import models
 from . import forms
 from CommentsApp.models import Comment
+from ProjectsApp.models import Project
 
 def getGroups(request):
     if request.user.is_authenticated():
@@ -162,12 +163,56 @@ def recommendedProjects(request):
 	if request.user.is_authenticated():
 		in_name = request.GET.get('name', 'None')
 		in_group = models.Group.objects.get(name__exact=in_name)
+		totalYearsXP = 0
+		totalLanguages = []
+		totalSpecialties = []
+		for e in in_group.members.all():
+			print e.first_name
+			print e.student.yearsXP
+			print e.student.languages
+			print e.student.specialties
+			totalYearsXP += e.student.yearsXP
+			totalLanguages.append(e.student.languages.split(','))
+			totalSpecialties.append(e.student.specialties.split(','))
+
+		totalLanguagesCleaned = sum(totalLanguages, [])
+		totalLanguagesCleaned = [x.strip(' ') for x in totalLanguagesCleaned]
+		totalLanguagesSet = list(set(totalLanguagesCleaned))
+		totalSpecialtiesCleaned = sum(totalSpecialties, [])
+		totalSpecialtiesCleaned = [x.strip(' ') for x in totalSpecialtiesCleaned]
+		totalSpecialtiesSet = list(set(totalSpecialtiesCleaned))
+
+		
+		print totalYearsXP
+		print totalLanguagesSet
+		print totalSpecialtiesSet
+
+		recommendedProjects = []	
+		for e in Project.objects.all():
+			print e.name
+			print e.yearsXP
+			print e.specialty
+			specialtyList = []
+			specialtyList.append(e.specialty.split(','))
+			specialtyList = sum(specialtyList, [])
+			specialtyList = [x.strip(' ') for x in specialtyList]
+			langsList = []
+			langsList.append(e.langs.split(','))
+			langsList = sum(langsList, [])
+			langsList = [x.strip(' ') for x in langsList]
+			print langsList
+			print specialtyList
+			if totalYearsXP >= e.yearsXP and bool(set(specialtyList) & set(totalSpecialtiesSet)) and bool(set(totalLanguagesSet) & set(langsList)):
+				recommendedProjects.append(e)
+
+		
 		#Run through all the users and parse their years of experience, programming languages, and specialties.
 		#Look at the projects and see which ones fit the best. 
-		
+		print "RecommendedProjects"
+		print recommendedProjects
 		context = {
 					'group' : in_group,
-					'projects' : 'None',
+					'projects' : recommendedProjects,
 					
 				}
 		return render(request, 'recommendedProjects.html', context)

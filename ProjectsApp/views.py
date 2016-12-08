@@ -70,7 +70,7 @@ def getProject(request):
 		print(request.user.bookmarks.filter(name__exact=in_name).exists())
 		if request.user.bookmarks.filter(name__exact=in_name).exists():
 			is_bookmarked = True
-		can_delete = False
+		can_update = False
 		if request.user.is_engineer == True:
 			can_update = request.user.engineer.projects.filter(name__exact=in_name).exists
 		context = {
