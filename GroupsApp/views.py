@@ -157,5 +157,20 @@ def deleteComment(request):
 				}
 		return render(request, 'group.html', context)
 	return render(request, 'autherror.html')
+	
+def recommendedProjects(request):
+	if request.user.is_authenticated():
+		in_name = request.GET.get('name', 'None')
+		in_group = models.Group.objects.get(name__exact=in_name)
+		#Run through all the users and parse their years of experience, programming languages, and specialties.
+		#Look at the projects and see which ones fit the best. 
+		
+		context = {
+					'group' : in_group,
+					'projects' : 'None',
+					
+				}
+		return render(request, 'recommendedProjects.html', context)
+	return render(request, 'autherror.html')
 
     
