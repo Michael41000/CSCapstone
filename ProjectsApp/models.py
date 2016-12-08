@@ -5,6 +5,7 @@ Created by Harris Christiansen on 10/02/16.
 from django.db import models
 from django.core.validators import MaxValueValidator
 from CompaniesApp.models import Company
+from AuthenticationApp.models import MyUser
 from django.utils.timezone import now
 
 class Project(models.Model):
@@ -13,6 +14,7 @@ class Project(models.Model):
     description = models.CharField(max_length=10000)
     created_at = models.DateTimeField('date created', default=now, blank=True)
     #updated_at = models.DateTimeField('date updated', default=now, blank=True)
+    bookmarks = models.ManyToManyField(MyUser)
 
     # TODO Task 3.5: Add field for company relationship
     # TODO Task 3.5: Add fields for project qualifications (minimum required: programming language, years of experience, speciality)

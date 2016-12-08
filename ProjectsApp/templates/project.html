@@ -12,6 +12,7 @@
 			<p>Specialties associated with this project: {{ project.specialty }}</p>
 			{% if user.is_engineer == True %}
 			<a href="/project/update"><input type="update" value="Edit Project" class="btn btn-primary"></a>
+			<a href="/project/delete?name={{ project.name }}" class="btn btn-default" style="float:right; background:red;">Delete This Project</a> 
 			{% endif %}
 		</div>
 	</div>

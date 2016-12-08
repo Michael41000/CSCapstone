@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^project$', views.getProject, name='Project'), #used to display specific project??
     url(r'^project/form$', views.getProjectForm, name='ProjectForm'),
     url(r'^project/formsuccess$', views.getProjectFormSuccess, name='ProjectFormSuccess'),
-    url(r'^project/update$', views.update_project, name='UpdateProjectForm'),
+    url(r'^project/update?$', views.update_project, name='UpdateProjectForm'),
+    url(r'^project/delete?$', views.deleteProject, name='ProjectDelete')
 ]

@@ -62,7 +62,7 @@ def update_project(request):
 	data = {'name', 'description', 'langs', 'yearsXP', 'specialty'}
 	newdata = models.Project.objects.raw('SELECT * FROM Projectsapp_Project', translations=data)
 	
-	form = UpdateProjectForm(instance=request.project)
+	form = UpdateProjectForm(request.POST or None, instance=request.user)
 	if form.is_valid():
 		form.save()
 		messages.success(request, 'Success, your project was updated!')
@@ -74,3 +74,11 @@ def update_project(request):
 		"links" : ["logout"],
 	}
 	return render(request, 'project_auth_form.html', context)
+
+def deleteProject(request):
+	if request.user.is_authenticated():
+		in_name = request.GET.get('name', 'None')
+		project_obj = models.Project.objects.get(name__exact=in_name)
+		project_obj.delete()
+		return render(request, 'projectdeletesuccess.html')
+	return render(request, 'autherror.html')
