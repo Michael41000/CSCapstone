@@ -7,3 +7,6 @@ from django import forms
 class GroupForm(forms.Form):
     name = forms.CharField(label='Name', max_length=30)
     description = forms.CharField(label='Description', max_length=300)
+    
+class CommentForm(forms.Form):
+	comment = forms.CharField(label='Text', max_length=500)
