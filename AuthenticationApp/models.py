@@ -69,7 +69,7 @@ class MyUser(AbstractBaseUser):
     # #New fields 	
 	is_student = models.BooleanField(default=False,)
 	is_professor = models.BooleanField(default=False,)
-	is_engineer = models.BooleanField(default=False,)    
+	is_engineer = models.BooleanField(default=False,)
 	
 
 	is_active = models.BooleanField(default=True,)
