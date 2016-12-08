@@ -192,6 +192,8 @@ class Engineer(models.Model):
 
 	almamater = models.ForeignKey(University, on_delete=models.CASCADE, null=True)
 
+	projects = models.ManyToManyField(ProjectTwo)
+
 	def get_full_name(self):        
 		return "%s %s" %(self.user.first_name, self.user.last_name)
 
